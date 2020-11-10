@@ -17,18 +17,17 @@
 let numberOfFilms;
 
 let personalMovieDB = {
-  count: numberOfFilms,
-  movies: {},
+  count: start(),
+  movies: rememberMyFilms(),
   actors: {},
-  genres: [],
-  privat: false
+  genres: writeYourGenres(),
+  privat: true,
 };
 
-start();
-// rememberMyFilms();
-// detectPersonalLevel();
-writeYourGenres();
-showMyDB(personalMovieDB.privat);
+
+detectPersonalLevel();
+showMyDB(toggleVisibleMyDB(personalMovieDB.privat));
+
 
 
 function start() {
@@ -37,21 +36,24 @@ function start() {
     while (numberOfFilms == '' || numberOfFilms == null || isNaN(numberOfFilms) ) {
       numberOfFilms = prompt('Сколько фильмов вы уже посмотрели?', '');
     }
+    return +numberOfFilms;
 }
 
 function rememberMyFilms() {
+  let movies = {};
   for (let i = 0; i < 2; i++) {
     const a = prompt('Один из последних просмотренных фильмов?', ''),
           b = prompt('На сколько оцените его?', '');
 
     if (a != null && b!= null && a != '' && b != '' && a.length < 30) {
-      personalMovieDB.movies[a] = b;
-      console.log('done');
+      movies[a] = b;
+      console.log('done question of Films');
     } else {
-      console.log('error');
+      console.log('error question of Films');
       i--;
     }
   }
+  return movies;
 }
 
 function detectPersonalLevel() {
@@ -67,15 +69,42 @@ function detectPersonalLevel() {
 }
 
 function showMyDB(hidden) {
+  
   if (!hidden) {
     console.log('personalMovieDB:', personalMovieDB);
   }
 }
 
-function writeYourGenres() {
-  for (let i = 1; i <= 3; i++) {
-    personalMovieDB.genres[i - 1] = prompt(`Ваш любимый жанр под номером ${i}`);
-  }
+function toggleVisibleMyDB(value) {
+    
+  if (value === false) {
+    value = true;
+    console.log('value: ', value);
+  } else {
+    value = false;
+    console.log('value: ', value);
+  } 
+  return value;
+  
+
 }
 
-console.log('Check');
+
+function writeYourGenres() {
+  let genres = [];
+  for (let i = 1; i <= 3; i++) {
+      const j = prompt(`Ваш любимый жанр под номером ${i}`);
+    if (j != null && j != '' ) {
+      genres[i - 1] = j;
+      console.log('done question of genres');
+    } else {
+      console.log('error question of genres');
+      i--;
+    }
+    
+  }
+  genres.forEach(function(p, i, genres) {
+    console.log(`Любимый жанр #${i+1} - это ${p}`);
+  });
+  return genres;
+}
